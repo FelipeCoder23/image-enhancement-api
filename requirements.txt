@@ -1,0 +1,6 @@
+fastapi[all]
+uvicorn
+pillow
+boto3
+opencv-python-headless
+opencv-contrib-python
