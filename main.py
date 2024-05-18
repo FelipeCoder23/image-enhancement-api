@@ -2,13 +2,9 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 import uvicorn
 from PIL import Image
 import io
-import boto3
-from models.super_resolution import enhance_image_resolution
+from models.super_resolution import enhance_image_resolution  # Asegúrate de que esta ruta sea correcta
 
 app = FastAPI()
-
-s3_client = boto3.client('s3')
-bucket_name = 'tu-bucket-s3'
 
 @app.post("/enhance-image/")
 async def enhance_image(file: UploadFile = File(...)):
@@ -24,10 +20,11 @@ async def enhance_image(file: UploadFile = File(...)):
         enhanced_image.save(buffer, format="PNG")
         buffer.seek(0)
 
-        # Subir la imagen mejorada a S3
-        s3_client.upload_fileobj(buffer, bucket_name, f"enhanced/{file.filename}")
+        # Guardar localmente para pruebas
+        with open(f"enhanced_{file.filename}", "wb") as f:
+            f.write(buffer.getbuffer())
 
-        return {"filename": file.filename, "status": "Image enhanced and uploaded to S3"}
+        return {"filename": file.filename, "status": "Image enhanced and saved locally"}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

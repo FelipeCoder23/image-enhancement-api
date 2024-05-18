@@ -13,7 +13,8 @@ def enhance_image_resolution(image: Image.Image) -> Image.Image:
     super_res_model = cv2.dnn_superres.DnnSuperResImpl_create()
 
     # Leer el modelo preentrenado
-    super_res_model.readModel('EDSR_x4.pb')  # Ruta al modelo preentrenado de EDSR
+    model_path = 'EDSR_x4.pb'  # Asegúrate de que esta ruta sea correcta
+    super_res_model.readModel(model_path)
 
     # Establecer el modelo para la escala x4
     super_res_model.setModel("edsr", 4)
