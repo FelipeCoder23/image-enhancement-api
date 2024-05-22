@@ -15,18 +15,24 @@ app = FastAPI()
 @app.post("/enhance-image/")
 async def enhance_image(file: UploadFile = File(...)):
     try:
+        logger.info("Received file for enhancement")
         # Leer la imagen subida
         image = Image.open(file.file)
+        logger.info("Image file opened successfully")
 
         # Mejorar la resolución de la imagen usando el modelo de IA
         enhanced_image = enhance_image_resolution(image)
+        logger.info("Image resolution enhanced")
+
         # Guardar la imagen mejorada en un buffer
         buffer = io.BytesIO()
         enhanced_image.save(buffer, format="PNG")
         buffer.seek(0)
+        logger.info("Enhanced image saved to buffer")
 
         # Codificar la imagen en base64
         encoded_image = base64.b64encode(buffer.getvalue()).decode("utf-8")
+        logger.info("Enhanced image encoded to base64")
 
         # Devolver la imagen codificada en base64
         return {"image": encoded_image, "status": "Image enhanced and returned successfully"}
